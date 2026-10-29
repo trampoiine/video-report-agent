@@ -2,14 +2,13 @@
 
 简体中文 | [English](README.en.md)
 
-把视频转写整理成可以扫读、精读和保存的 HTML 阅读报告。可以直接在 [VReport 网站](https://vreport.tri4t.xyz) 使用，也可以把本仓库的 Skill 和模板交给自己的 Coding Agent，在本地生成报告。
+把视频转写整理成可以扫读、精读和保存的 HTML 阅读报告。把本仓库的 Skill 和模板交给自己的 Coding Agent，就能在本地生成报告。
 
-**本仓库的核心资产是 [`video-report` 模板 Skill](src/video_report_agent/skills/video-report/)**：它把内容编辑规则、阅读模式、视觉模板和来源约束放在一起，指导 Agent 从完整转写中组织一份可读的报告。Python 流水线负责下载、转写、运行 Agent 和导出长图；网站、账户和额度由独立的 Web Service 维护。
+**本仓库的核心资产是 [`video-report` 模板 Skill](src/video_report_agent/skills/video-report/)**：它把内容编辑规则、阅读模式、视觉模板和来源约束放在一起，指导 Agent 从完整转写中组织一份可读的报告。Python 流水线负责下载、转写、运行 Agent 和导出长图；网站、账户额度与运营部署不在本仓库内，由部署方自行负责。
 
 | 你想做什么 | 从这里开始 |
 |---|---|
-| 在线生成报告 | [打开 VReport](https://vreport.tri4t.xyz) |
-| 把已有转写交给自己的 Coding Agent | [下载 Skill ZIP v0.5.0](https://github.com/imexlovery/video-report-agent/releases/download/skill-zip-v0.5.0/video-report-skill-v0.5.0.zip) · [简短使用说明与示例](docs/skill-bundle/README.md) |
+| 把已有转写交给自己的 Coding Agent | [简短使用说明与示例](docs/skill-bundle/README.md) · 需要独立包时本地构建（见下） |
 | 从视频链接运行完整流程 | [完整 CLI 安装说明](#方式二运行完整-cli-流水线) |
 
 ## 先看成品
@@ -18,7 +17,7 @@
 
 [![阅读报告预览](docs/images/report-preview.png)](docs/examples/report.png)
 
-[示例 HTML](docs/examples/report.html) · [完整 PNG](docs/examples/report.png) · [在线使用](https://vreport.tri4t.xyz)
+[示例 HTML](docs/examples/report.html) · [完整 PNG](docs/examples/report.png)
 
 GitHub 上的 HTML 链接会打开源码页，下载后用浏览器打开即可阅读。示例随仓库提供，无需启动服务。
 
@@ -48,7 +47,7 @@ Skill 包含四部分，使用时需要保留整个目录：
 
 ## 方式一：交给自己的 Coding Agent
 
-这是复用核心资产最直接的方式，无需安装本项目的 Python 后端、Pi 或网站。
+这是复用核心资产最直接的方式，无需安装本项目的 Python 后端或 Pi。
 
 ### 1. 准备完整转写
 
@@ -58,15 +57,17 @@ ASR 负责把语音变成文字，Coding Agent 的模型负责阅读和生成报
 
 ### 2. 获取完整 Skill 目录
 
-下载 [Skill ZIP v0.5.0](https://github.com/imexlovery/video-report-agent/releases/download/skill-zip-v0.5.0/video-report-skill-v0.5.0.zip) 并解压。包内有完整 Skill、简短说明，以及配套的转写和 HTML 示例；可以先按包内 `README.md` 试用。
-
-需要源码时，也可以克隆仓库：
+从源码仓库打包一份独立 Skill 目录。打包只需 uv 执行仓库自带的脚本，不需要安装 Python 流水线：
 
 ```sh
-git clone https://github.com/imexlovery/video-report-agent.git
+git clone https://github.com/trampoiine/video-report-agent.git
+cd video-report-agent
+uv run python scripts/build_skill_bundle.py --version 0.5.0
 ```
 
-使用下载包中的 `video-report/`，或从源码复制完整的 `src/video_report_agent/skills/video-report/`，保持相对路径：
+产物是 `.local/dist/video-report-skill-v0.5.0.zip`，解压后得到 `video-report-skill-v0.5.0/`，内含完整 Skill、简短说明与示例转写，可按包内 `README.md` 试用。
+
+把打包结果里的 `video-report/` 放到工作目录，或直接从源码复制完整的 `src/video_report_agent/skills/video-report/`，保持相对路径：
 
 ```text
 my-report/
@@ -117,7 +118,7 @@ Python 负责确定性的处理步骤与任务监督；Pi 提供模型调用、�
 需要 Python 3.12、uv、PATH 中的 `ffmpeg` / `ffprobe`，以及 Node.js 22 和 npm。从源码仓库安装：
 
 ```sh
-git clone https://github.com/imexlovery/video-report-agent.git
+git clone https://github.com/trampoiine/video-report-agent.git
 cd video-report-agent
 npm install -g @earendil-works/pi-coding-agent@0.85.0
 pi --version
@@ -186,4 +187,4 @@ uv lock --check
 - [报告 Skill 入口](src/video_report_agent/skills/video-report/SKILL.md)：实际生成规则与阅读顺序。
 - [报告评测](evals/report-review/README.md)：公开合成 smoke 与可选真实模型评测。HTML/来源绑定检查和内容、视觉质量需分别判断。
 
-调用方默认使用包内 Skill；实验时可通过 `PiRunner(skill_dir=...)` 或 Worker 环境变量 `VIDEO_REPORT_SKILL_DIR` 选择完整 Skill 目录。账户、额度、队列和网站部署属于独立 Web Service，公开 Core 只维护生成能力。
+调用方默认使用包内 Skill；实验时可通过 `PiRunner(skill_dir=...)` 或 Worker 环境变量 `VIDEO_REPORT_SKILL_DIR` 选择完整 Skill 目录。账户、额度、队列与网站部署不在本仓库内，由部署方自行负责；本仓库只维护生成能力。

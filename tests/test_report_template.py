@@ -17,16 +17,13 @@ def test_video_description_placeholder_reuses_source_details_contract():
     ) in template
 
 
-def test_footer_keeps_report_label_left_and_domain_right():
+def test_footer_keeps_report_label_without_site_promotion():
     template = TEMPLATE.read_text()
 
     assert "footer{display:flex;align-items:baseline;justify-content:space-between;" in template
-    assert (
-        '<footer><span>视频报告·精读</span>'
-        '<a class="footer-link" href="https://vreport.tri4t.xyz/">'
-        "vreport.tri4t.xyz</a></footer>"
-    ) in template
-    assert ".footer-link,.footer-link:hover{color:inherit;text-decoration:underline}" in template
+    assert "<footer><span>视频报告·精读</span></footer>" in template
+    assert "vreport.tri4t.xyz" not in template
+    assert "footer-link" not in template
 
 
 def test_header_contract_keeps_summary_and_full_source_metadata():
@@ -93,5 +90,5 @@ def test_brief_template_fills_shared_delivery_contract(tmp_path):
     assert "{{" not in html
     assert "Original &lt;source&gt;" in html
     assert "视频报告·速览" in html
-    assert 'href="https://vreport.tri4t.xyz/"' in html
+    assert "vreport.tri4t.xyz" not in html
     assert 'class="brief-paper"' in html

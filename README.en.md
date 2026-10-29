@@ -2,14 +2,13 @@
 
 [简体中文](README.md) | English
 
-Turn video transcripts into HTML reports you can skim, study and save. Use the [VReport website](https://vreport.tri4t.xyz), or give this repository's Skill and templates to your own Coding Agent to generate reports locally.
+Turn video transcripts into HTML reports you can skim, study and save. Give this repository's Skill and templates to your own Coding Agent to generate reports locally.
 
-**The central asset is the [`video-report` template Skill](src/video_report_agent/skills/video-report/)**. It combines editing guidance, reading modes, visual templates and source constraints to help an Agent organize a readable report from a complete transcript. The Python pipeline handles downloading, transcription, Agent execution and image export. A separate Web Service owns the website, accounts and credits.
+**The central asset is the [`video-report` template Skill](src/video_report_agent/skills/video-report/)**. It combines editing guidance, reading modes, visual templates and source constraints to help an Agent organize a readable report from a complete transcript. The Python pipeline handles downloading, transcription, Agent execution and image export. The website, accounts, credits and hosted deployment are outside this repository and are up to whoever deploys it.
 
 | What you want to do | Start here |
 |---|---|
-| Generate a report online | [Open VReport](https://vreport.tri4t.xyz) |
-| Give an existing transcript to your own Coding Agent | [Download Skill ZIP v0.5.0](https://github.com/imexlovery/video-report-agent/releases/download/skill-zip-v0.5.0/video-report-skill-v0.5.0.zip) · [Quick start and examples (Chinese)](docs/skill-bundle/README.md) |
+| Give an existing transcript to your own Coding Agent | [Quick start and examples (Chinese)](docs/skill-bundle/README.md) · build the standalone bundle locally (see below) |
 | Run the complete workflow from a video URL | [CLI installation](#option-2-run-the-complete-cli-pipeline) |
 
 ## See the result
@@ -18,7 +17,7 @@ This preview shows the top of a sample report. Click it for the complete image.
 
 [![Reading report preview](docs/images/report-preview.png)](docs/examples/report.png)
 
-[Sample HTML](docs/examples/report.html) · [Full PNG](docs/examples/report.png) · [Use online](https://vreport.tri4t.xyz)
+[Sample HTML](docs/examples/report.html) · [Full PNG](docs/examples/report.png)
 
 On GitHub, the HTML link opens the source file. Download it and open it in a browser. These examples ship with the repository and require no running service.
 
@@ -48,7 +47,7 @@ Delivery is a self-contained `report.html` with inline styles, ready to open in 
 
 ## Option 1: use your own Coding Agent
 
-This is the most direct way to reuse the core asset. It needs no project Python backend, Pi or website.
+This is the most direct way to reuse the core asset. It needs no project Python backend or Pi.
 
 ### 1. Prepare a complete transcript
 
@@ -58,15 +57,17 @@ ASR converts speech into text; your Coding Agent's model reads it and generates 
 
 ### 2. Get the complete Skill directory
 
-Download and extract [Skill ZIP v0.5.0](https://github.com/imexlovery/video-report-agent/releases/download/skill-zip-v0.5.0/video-report-skill-v0.5.0.zip). It includes the complete Skill, a short Chinese guide, and a paired transcript and HTML example. Start with the bundled `README.md`.
-
-To get the source code, clone the repository:
+Build a standalone Skill directory from the source repository. Building only needs uv to run the bundled script; the Python pipeline does not have to be installed:
 
 ```sh
-git clone https://github.com/imexlovery/video-report-agent.git
+git clone https://github.com/trampoiine/video-report-agent.git
+cd video-report-agent
+uv run python scripts/build_skill_bundle.py --version 0.5.0
 ```
 
-Use `video-report/` from the download, or copy the complete `src/video_report_agent/skills/video-report/` directory from the source repository, preserving relative paths:
+The archive lands in `.local/dist/video-report-skill-v0.5.0.zip`; extracting it yields `video-report-skill-v0.5.0/` with the complete Skill, a short guide and a sample transcript. Start with the bundled `README.md`.
+
+Use `video-report/` from the built bundle, or copy the complete `src/video_report_agent/skills/video-report/` directory from the source repository, preserving relative paths:
 
 ```text
 my-report/
@@ -118,7 +119,7 @@ Python handles deterministic processing and task supervision. Pi supplies model 
 Use Python 3.12, uv, `ffmpeg` / `ffprobe` on PATH, and Node.js 22 with npm. Install from the source repository:
 
 ```sh
-git clone https://github.com/imexlovery/video-report-agent.git
+git clone https://github.com/trampoiine/video-report-agent.git
 cd video-report-agent
 npm install -g @earendil-works/pi-coding-agent@0.85.0
 pi --version
@@ -187,4 +188,4 @@ uv lock --check
 - [Report Skill entrypoint](src/video_report_agent/skills/video-report/SKILL.md): actual generation rules and reading order.
 - [Report evaluation](evals/report-review/README.md): public synthetic smoke inputs and optional live-model evaluation. HTML/source-link checks, content fidelity and visual quality need separate assessment.
 
-Callers use the packaged Skill by default. Experiments can select a complete directory through `PiRunner(skill_dir=...)` or the Worker environment variable `VIDEO_REPORT_SKILL_DIR`. Accounts, credits, queues and website deployment belong to the separate Web Service; public Core maintains generation capabilities.
+Callers use the packaged Skill by default. Experiments can select a complete directory through `PiRunner(skill_dir=...)` or the Worker environment variable `VIDEO_REPORT_SKILL_DIR`. Accounts, credits, queues and website deployment are outside this repository and are up to whoever deploys it; this repository maintains generation capabilities only.
