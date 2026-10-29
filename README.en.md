@@ -8,7 +8,7 @@ Turn video transcripts into HTML reports you can skim, study and save. Give this
 
 | What you want to do | Start here |
 |---|---|
-| Give an existing transcript to your own Coding Agent | [Quick start and examples (Chinese)](docs/skill-bundle/README.md) · build the standalone bundle locally (see below) |
+| Give an existing transcript to your own Coding Agent | [Download Skill ZIP v0.5.1](https://github.com/trampoiine/video-report-agent/releases/download/skill-zip-v0.5.1/video-report-skill-v0.5.1.zip) · [Quick start and examples (Chinese)](docs/skill-bundle/README.md) |
 | Run the complete workflow from a video URL | [CLI installation](#option-2-run-the-complete-cli-pipeline) |
 
 ## See the result
@@ -57,15 +57,15 @@ ASR converts speech into text; your Coding Agent's model reads it and generates 
 
 ### 2. Get the complete Skill directory
 
-Build a standalone Skill directory from the source repository. Building only needs uv to run the bundled script; the Python pipeline does not have to be installed:
+Download and extract [Skill ZIP v0.5.1](https://github.com/trampoiine/video-report-agent/releases/download/skill-zip-v0.5.1/video-report-skill-v0.5.1.zip). You can also build the bundle from the source repository: it only needs uv to run the bundled script, and the Python pipeline does not have to be installed:
 
 ```sh
 git clone https://github.com/trampoiine/video-report-agent.git
 cd video-report-agent
-uv run python scripts/build_skill_bundle.py --version 0.5.0
+uv run python scripts/build_skill_bundle.py --version 0.5.1
 ```
 
-The archive lands in `.local/dist/video-report-skill-v0.5.0.zip`; extracting it yields `video-report-skill-v0.5.0/` with the complete Skill, a short guide and a sample transcript. Start with the bundled `README.md`.
+Both routes yield `video-report-skill-v0.5.1/`, containing the complete Skill, a short guide and a sample transcript. Start with the bundled `README.md`; the local build lands in `.local/dist/`.
 
 Use `video-report/` from the built bundle, or copy the complete `src/video_report_agent/skills/video-report/` directory from the source repository, preserving relative paths:
 

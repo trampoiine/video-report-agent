@@ -8,7 +8,7 @@
 
 | 你想做什么 | 从这里开始 |
 |---|---|
-| 把已有转写交给自己的 Coding Agent | [简短使用说明与示例](docs/skill-bundle/README.md) · 需要独立包时本地构建（见下） |
+| 把已有转写交给自己的 Coding Agent | [下载 Skill ZIP v0.5.1](https://github.com/trampoiine/video-report-agent/releases/download/skill-zip-v0.5.1/video-report-skill-v0.5.1.zip) · [简短使用说明与示例](docs/skill-bundle/README.md) |
 | 从视频链接运行完整流程 | [完整 CLI 安装说明](#方式二运行完整-cli-流水线) |
 
 ## 先看成品
@@ -57,15 +57,15 @@ ASR 负责把语音变成文字，Coding Agent 的模型负责阅读和生成报
 
 ### 2. 获取完整 Skill 目录
 
-从源码仓库打包一份独立 Skill 目录。打包只需 uv 执行仓库自带的脚本，不需要安装 Python 流水线：
+下载 [Skill ZIP v0.5.1](https://github.com/trampoiine/video-report-agent/releases/download/skill-zip-v0.5.1/video-report-skill-v0.5.1.zip) 并解压。也可以从源码仓库自己打包：只需 uv 执行仓库自带脚本，不需要安装 Python 流水线：
 
 ```sh
 git clone https://github.com/trampoiine/video-report-agent.git
 cd video-report-agent
-uv run python scripts/build_skill_bundle.py --version 0.5.0
+uv run python scripts/build_skill_bundle.py --version 0.5.1
 ```
 
-产物是 `.local/dist/video-report-skill-v0.5.0.zip`，解压后得到 `video-report-skill-v0.5.0/`，内含完整 Skill、简短说明与示例转写，可按包内 `README.md` 试用。
+包内是 `video-report-skill-v0.5.1/`，含完整 Skill、简短说明与示例转写，可按包内 `README.md` 试用；本地打包的产物在 `.local/dist/`。
 
 把打包结果里的 `video-report/` 放到工作目录，或直接从源码复制完整的 `src/video_report_agent/skills/video-report/`，保持相对路径：
 
